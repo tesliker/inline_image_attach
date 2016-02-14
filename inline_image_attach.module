@@ -6,10 +6,10 @@
 function inline_image_attach_entity_presave($entity, $type) {
   // Get configuration settings.
   $settings = \Drupal::config('inline_image_attach.settings');
-  $typeId = $entity->getEntityTypeId();
-  if (isset($typeId)) {
+  $type_id = $entity->getEntitytype_id();
+  if (isset($type_id)) {
     // If the entity we are saving is a node type.
-    if ($typeId == 'node' && !empty($settings)) {
+    if ($type_id == 'node' && !empty($settings)) {
       // Convert type to machine name.
       $type = str_replace(' ', '_', strtolower($entity->type->target_id));
       // Get the correct settings for this type.
@@ -19,7 +19,7 @@ function inline_image_attach_entity_presave($entity, $type) {
       preg_match_all('~<img.*?src=["\']+(.*?)["\']+~', $entity->{$iia_wysiwyg}->value, $urls);
       $result = array();
       foreach ($urls[1] as $path) {
-        // Query the database for any inline images that match this URL
+        // Query the database for any inline images that match this URL.
         $filename = basename($path);
         $uri = 'public://inline-images/' . urldecode($filename);
         $query = \Drupal::entityQuery('file');
@@ -33,7 +33,7 @@ function inline_image_attach_entity_presave($entity, $type) {
       }
       $existing_files = array();
       // Grab any existing files on the image field.
-      foreach ($entity->{$iia_image}->getIterator() as $delta => $image) {
+      foreach ($entity->{$iia_image}->getIterator() as $image) {
         array_push($existing_files, $image->target_id);
       }
       // Only add the file if it does not already exist on the image field.
