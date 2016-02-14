@@ -2,10 +2,10 @@
 
 /**
 * @file
-* Contains \Drupal\inline_inline_image_attach\Form\InlineImageAttachForm
+* Contains \Drupal\inline_image_attach\Form\InlineImageAttachForm
 */
 
-namespace Drupal\inline_inline_image_attach\Form;
+namespace Drupal\inline_image_attach\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,14 +15,14 @@ class InlineImageAttachForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['inline_inline_image_attach.settings'];
+    return ['inline_image_attach.settings'];
   }
 
   /**
   * {@inheridoc}
   */
   public function getFormId() {
-    return 'inline_inline_image_attach_form';
+    return 'inline_image_attach_form';
   }
   
   /**
