@@ -6,7 +6,7 @@
 function inline_image_attach_entity_presave($entity, $type) {
   // Get configuration settings.
   $settings = \Drupal::config('inline_image_attach.settings');
-  $type_id = $entity->getEntitytype_id();
+  $type_id = $entity->getEntityTypeId();
   if (isset($type_id)) {
     // If the entity we are saving is a node type.
     if ($type_id == 'node' && !empty($settings)) {
