@@ -1,9 +1,9 @@
 <?php
 
 /**
-* @file
-* Contains \Drupal\inline_image_attach\Form\InlineImageAttachForm
-*/
+ * @file
+ * Contains \Drupal\inline_image_attach\Form\InlineImageAttachForm.
+ */
 
 namespace Drupal\inline_image_attach\Form;
 
@@ -19,20 +19,25 @@ class InlineImageAttachForm extends ConfigFormBase {
   }
 
   /**
-  * {@inheridoc}
-  */
+   * {@inheridoc}
+   */
   public function getFormId() {
     return 'inline_image_attach_form';
   }
   
   /**
-  * {@inheridoc}
-  */
+   * {@inheridoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // Get all content types.
     $nodes = entity_get_bundles('node');
-    foreach ($nodes as $k => $node) {
+    // Loop through each content type.
+    foreach ($nodes as $node) {
+      // Convert type label to machine name.
       $type = str_replace(' ', '_', strtolower($node['label']));
+      // Get all fields on the content type
       $fields = \Drupal::entityManager()->getFieldDefinitions('node', $type);
+      // Populate a list of options from the field names.
       $options = array('none' => 'None');
       foreach ($fields as $field => $value) {
         if (strpos($field, 'field_') !== FALSE || strpos($field, 'body') !== FALSE) {
@@ -42,6 +47,7 @@ class InlineImageAttachForm extends ConfigFormBase {
 
       $config = $this->config('inline_image_attach.settings');
 
+      // Create a settings form for each content type that has fields or a body.
       if (count($options) > 1) {
         $form['inline_image_attach_' . $type] = array(
           '#type' => 'fieldset',
@@ -70,12 +76,14 @@ class InlineImageAttachForm extends ConfigFormBase {
   }
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
+    // Get all form state values.
     $values = $form_state->getValue();
     $config = \Drupal::service('config.factory')->getEditable('inline_image_attach.settings');
+    // Loop through all of the values and set any values that are applicable.
     foreach ($values as $key => $value) {
       if (strpos($key, 'iia_wysiwyg') !== FALSE || strpos($key, 'iia_image') !== FALSE) {
         $config->set($key, $value);
