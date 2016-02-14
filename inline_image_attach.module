@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function inline_image_attach_entity_presave($entity, $type) {
+  $settings = \Drupal::config('inline_image_attach.settings');
+  $typeId = $entity->getEntityTypeId();
+  if (isset($typeId)) {
+    if ($typeId == 'node' && !empty($settings)) {
+      $type = str_replace(' ', '_', strtolower($entity->type->target_id));
+      $iia_wysiwyg = $settings->get('iia_wysiwyg_' . $type);
+      $iia_image = $settings->get('iia_image_' . $type);
+      preg_match_all('~<img.*?src=["\']+(.*?)["\']+~', $entity->{$iia_wysiwyg}->value, $urls);
+      $result = array();
+      foreach ($urls[1] as $path) {
+        $filename = basename($path);
+        $uri = 'public://inline-images/' . urldecode($filename);
+        $query = \Drupal::entityQuery('file');
+        $query->condition('uri', $uri, '=');
+        $result[] = $query->execute();
+      }
+      $files = array();
+      foreach ($result as $k => $f) {
+        $files[] = entity_load('file', array_shift($f));
+      }
+      $existing_files = array();
+      foreach ($entity->{$iia_image}->getIterator() as $delta => $image) {
+        array_push($existing_files, $image->target_id);
+      }
+      foreach ($files as $file) {
+        if (!in_array($file->fid->value, $existing_files)) {
+          $entity->{$iia_image}[] = $file->id();
+        }
+      }
+    }
+  }
+}
