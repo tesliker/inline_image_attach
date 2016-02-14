@@ -46,20 +46,19 @@ class InlineImageAttachForm extends ConfigFormBase {
         $form['inline_image_attach_' . $type] = array(
           '#type' => 'fieldset',
           '#title' => $type,
-          '#description' => $this->t('Display controls in the bottom right corner'),
         );
         $form['inline_image_attach_' . $type]['iia_wysiwyg_' . $type] = array(
           '#type' => 'select',
-          '#title' => 'WYSIWYG Field',
-          '#description' => $this->t('Display controls in the bottom right corner'),
+          '#title' => $this->t('WYSIWYG Field'),
+          '#description' => $this->t('The text field that is using a WYSIWYG to add images'),
           '#default_value' => $config->get('iia_wysiwyg_' . $type),
           '#group' => 'inline_image_attach_' . $type,
           '#options' => $options,
         );
         $form['inline_image_attach_' . $type]['iia_image_' . $type] = array(
           '#type' => 'select',
-          '#title' => 'Image Field',
-          '#description' => $this->t('Display controls in the bottom right corner'),
+          '#title' => $this->t('Image Field'),
+          '#description' => $this->t('The image field of which the WYSIWYG images will be attached.'),
           '#default_value' => $config->get('iia_image_' . $type),
           '#group' => 'inline_image_attach_' . $type,
           '#options' => $options,
