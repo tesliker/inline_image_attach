@@ -4,4 +4,4 @@ inline_image_attach.form:
     _title: 'Inline Image Attach'
     _form: '\Drupal\inline_image_attach\Form\InlineImageAttachForm'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer inline image attach'

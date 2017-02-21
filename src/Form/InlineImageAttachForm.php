@@ -9,8 +9,19 @@ namespace Drupal\inline_image_attach\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\ConfigFactory;
 
 class InlineImageAttachForm extends ConfigFormBase {
+
+  protected $config;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(ConfigFactory $config) {
+    $this->config = $config;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -29,12 +40,11 @@ class InlineImageAttachForm extends ConfigFormBase {
    * {@inheridoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     // Get all content types.
     $nodes = entity_get_bundles('node');
     // Loop through each content type.
-    foreach ($nodes as $node) {
-      // Convert type label to machine name.
-      $type = str_replace(' ', '_', strtolower($node['label']));
+    foreach ($nodes as $type => $node) {
       // Get all fields on the content type
       $fields = \Drupal::entityManager()->getFieldDefinitions('node', $type);
       // Populate a list of options from the field names.
@@ -81,14 +91,14 @@ class InlineImageAttachForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     // Get all form state values.
-    $values = $form_state->getValue();
-    $config = \Drupal::service('config.factory')->getEditable('inline_image_attach.settings');
+    $values = $form_state->getValues();
+    $configuration = $this->config->getEditable('inline_image_attach.settings');
     // Loop through all of the values and set any values that are applicable.
     foreach ($values as $key => $value) {
       if (strpos($key, 'iia_wysiwyg') !== FALSE || strpos($key, 'iia_image') !== FALSE) {
-        $config->set($key, $value);
+        $configuration->set($key, $value);
       }
     }
-    $config->save();
+    $configuration->save();
   }
 }
